@@ -55,3 +55,16 @@ async function main() {
 }
 
 main();
+
+import express, { Application, Request, Response } from 'express'
+import http from 'http'
+
+const app: Application = express()
+
+app.get('/', async(req: Request, res: Response): Promise<Response> => {
+    return res.status(200).send({ info: `hello` })
+})
+
+http.createServer(app).listen(3000, () => {
+  console.log('Server is listening!')
+})
