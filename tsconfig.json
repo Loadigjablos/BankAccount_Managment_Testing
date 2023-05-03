@@ -7,6 +7,6 @@
     "esModuleInterop": true,
     "strict": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/tests/loadtest/-R requestGeneratorModule.js"],
   "exclude": ["node_modules"]
 }
