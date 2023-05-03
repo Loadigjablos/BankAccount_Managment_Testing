@@ -1,6 +1,9 @@
 import { Database } from "./database";
 import { Bank } from "./bank/bank";
 
+import express, { Application, Request, Response } from 'express'
+import http from 'http'
+
 async function main() {
   const db = new Database();
   const bank = new Bank(db);
@@ -10,11 +13,12 @@ async function main() {
   // Create new accounts
   if (bank.accounts.length === 0) {
     await bank.createAccount(1234, 2000);
-    await bank.createAccount(5678, 5000);
+    await bank.createAccount(5678, 2000);
   }
   // Show accounts
   const account1 = bank.accounts[0];
   const account2 = bank.accounts[1];
+  /*
   console.log("Initial accounts");
   await bank.showAccounts();
   // Do transaction
@@ -52,19 +56,24 @@ async function main() {
   await bank.loadAccounts();
   console.log("After loading accounts from database");
   await bank.showAccounts();
+*/
+  const app: Application = express()
+
+  app.get('/', async(req: Request, res: Response): Promise<Response> => {
+    await bank.transaction(
+      account1.accountNumber,
+      account2.accountNumber,
+      100,
+      1234
+    );
+    await bank.showAccounts()
+    return res.status(200).send({ info: "done"})
+  })
+
+  http.createServer(app).listen(3000, () => {
+    console.log('Server is listening!')
+  })
+
 }
 
 main();
-
-import express, { Application, Request, Response } from 'express'
-import http from 'http'
-
-const app: Application = express()
-
-app.get('/', async(req: Request, res: Response): Promise<Response> => {
-    return res.status(200).send({ info: `hello` })
-})
-
-http.createServer(app).listen(3000, () => {
-  console.log('Server is listening!')
-})
